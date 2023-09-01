@@ -3,12 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the image
-img = cv.imread('flower.jpg')
+img = cv.imread('daisy.jpg')
 height, width, _ = img.shape
-left_margin_proportion = 0.1 #0.2 crops off too much
-right_margin_proportion = 0.2 #0.3 crops off too much
-up_margin_proportion = 0.2 #0.3 crops off too much
-down_margin_proportion = 0.35 #0.4 crops off too much
+left_margin_proportion = 0.1 
+right_margin_proportion = 0.1 
+up_margin_proportion = 0.1 
+down_margin_proportion = 0.45
 
 rect = (
     int(width * left_margin_proportion),
@@ -25,6 +25,7 @@ fgdModel = np.zeros((1,65),np.float64)
 #rect = (20,199,170,170)
 mask, bgdModel, fgdModel = cv.grabCut(img, mask, rect, bgdModel, fgdModel, 5, cv.GC_INIT_WITH_RECT)
 
+main_mask = (mask == cv.GC_PR_FGD).astype("uint8")*255
 mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
 img_fg = img*mask2[:,:,np.newaxis]
 
@@ -34,7 +35,7 @@ img_bg = img*mask3[:,:,np.newaxis]
 cv.imshow("Foreground",img_fg)
 cv.imshow("Background",img_bg)
 cv.imshow("Original Image",img)
-cv.imshow("Mask",mask)
+cv.imshow("Mask",main_mask)
 cv.waitKey(0)
 cv.destroyAllWindows()
 
