@@ -1,33 +1,196 @@
 import numpy as np
-import cv2
-import math
-angle=45
-radians = float(angle*(math.pi/180))
-img = cv2.imread('zooming\zooming\im01small.png',1)
-width,height,chan = img.shape
+import cv2 as cv
+import matplotlib.pyplot as plt
+
+#Reading Images
+img1 = cv.imread('zooming\zooming\im01small.png',1)
+img2 = cv.imread('zooming\zooming\im02small.png',1)
+img3 = cv.imread('zooming\zooming\im03small.png',1)
+img4 = cv.imread('zooming\zooming\im04small.png',1)
+img5 = cv.imread('zooming\zooming\im05small.png',1)
+img6 = cv.imread('zooming\zooming\im06small.png',1)
+img7 = cv.imread('zooming\zooming\im07small.png',1)
+img8 = cv.imread('zooming\zooming\im08small.png',1)
+img9 = cv.imread('zooming\zooming\im09small.png',1)
+img10 = cv.imread('zooming\zooming\im10small.png',1)
+img11 = cv.imread('zooming\zooming\im11small.png',1)
+
+Limg1 = cv.imread('zooming\zooming\im01.png',1)
+Limg2 = cv.imread('zooming\zooming\im02.png',1)
+Limg3 = cv.imread('zooming\zooming\im03.png',1)
+Limg4 = cv.imread('zooming\zooming\im04.png',1)
+Limg5 = cv.imread('zooming\zooming\im05.png',1)
+Limg6 = cv.imread('zooming\zooming\im06.png',1)
+Limg7 = cv.imread('zooming\zooming\im07.png',1)
+Limg8 = cv.imread('zooming\zooming\im08.png',1)
+Limg9 = cv.imread('zooming\zooming\im09.png',1)
+Limg10 = cv.imread('zooming\zooming\im10.png',1)
+Limg11 = cv.imread('zooming\zooming\im11.png',1)
+
+#Nearest Neighbour Interpolation
+def nearest_neighbour(scale, image):
+    height = int(scale*image.shape[0])
+    width = int(scale*image.shape[1])
+    
+    zoomed_img = np.zeros((height,width,3),dtype = image.dtype)
+    for i in range(height):
+        for j in range(width):
+            zoomed_img[i,j] = image[int(i/scale),int(j/scale)]
+    return zoomed_img
+
+#Bilinear Interpolation
+def bilinear(scale, image):
+    height = int(scale*image.shape[0])
+    width = int(scale*image.shape[1])
+    
+    zoomed_img = cv.resize(image,(width,height),interpolation = cv.INTER_LINEAR)
+    return zoomed_img
+
+scale = 4
+#Nearest Neighbour Interpolation on the pictures
+nn_img1 = nearest_neighbour(scale,img1)
+nn_img2 = nearest_neighbour(scale,img2)
+nn_img3 = nearest_neighbour(scale,img3)
+nn_img4 = nearest_neighbour(scale,img4)
+nn_img5 = nearest_neighbour(scale,img5)
+nn_img6 = nearest_neighbour(scale,img6)
+nn_img7 = nearest_neighbour(scale,img7)
+nn_img8 = nearest_neighbour(scale,img8)
+nn_img9 = nearest_neighbour(scale,img9)
+nn_img10 = nearest_neighbour(scale,img10)
+nn_img11 = nearest_neighbour(scale,img11)
+
+#Bilinear Interpolation on the pictures
+bl_img1 = bilinear(scale,img1)
+bl_img2 = bilinear(scale,img2)
+bl_img3 = bilinear(scale,img3)
+bl_img4 = bilinear(scale,img4)
+bl_img5 = bilinear(scale,img5)
+bl_img6 = bilinear(scale,img6)
+bl_img7 = bilinear(scale,img7)
+bl_img8 = bilinear(scale,img8)
+bl_img9 = bilinear(scale,img9)
+bl_img10 = bilinear(scale,img10)
+bl_img11 = bilinear(scale,img11)
+
+#Calculating SSD
+ssd_1 = np.sum(((Limg1[:,:]-nn_img1[:,:])**2)/(3*255**2))/(Limg1.shape[0]*Limg1.shape[1])
+ssd_2 = np.sum(((Limg2[:,:]-nn_img2[:,:])**2)/(3*255**2))/(Limg2.shape[0]*Limg2.shape[1])
+ssd_3 = np.sum(((Limg3[:,:]-nn_img3[:,:])**2)/(3*255**2))/(Limg3.shape[0]*Limg3.shape[1])
+ssd_4 = np.sum(((Limg4[:,:]-nn_img4[:,:])**2)/(3*255**2))/(Limg4.shape[0]*Limg4.shape[1])
+ssd_5 = np.sum(((Limg5[:,:]-nn_img5[:,:])**2)/(3*255**2))/(Limg5.shape[0]*Limg5.shape[1])
+ssd_6 = np.sum(((Limg6[:,:]-nn_img6[:,:])**2)/(3*255**2))/(Limg6.shape[0]*Limg6.shape[1])
+ssd_7 = np.sum(((Limg7[:,:]-nn_img7[:,:])**2)/(3*255**2))/(Limg7.shape[0]*Limg7.shape[1])
+ssd_8 = np.sum(((Limg8[:,:]-nn_img8[:,:])**2)/(3*255**2))/(Limg8.shape[0]*Limg8.shape[1])
+ssd_9 = np.sum(((Limg9[:,:]-nn_img9[:,:])**2)/(3*255**2))/(Limg9.shape[0]*Limg9.shape[1])
+ssd_10 = np.sum(((Limg10[:,:]-nn_img10[:,:])**2)/(3*255**2))/(Limg10.shape[0]*Limg10.shape[1])
+ssd_11 = np.sum(((Limg11[:,:]-nn_img11[:,:])**2)/(3*255**2))/(Limg11.shape[0]*Limg11.shape[1])
+
+print("SSD for Nearest Neighbour Interpolation")
+print("SSD for Image 1:", ssd_1)
+print("SSD for Image 2:", ssd_2)
+#print("SSD for Image 3:", ssd_3)
+print("SSD for Image 4:", ssd_4)
+print("SSD for Image 5:", ssd_5)
+print("SSD for Image 6:", ssd_6)
+print("SSD for Image 7:", ssd_7)
+#print("SSD for Image 8:", ssd_8)
+print("SSD for Image 9:", ssd_9)
+#print("SSD for Image 10:", ssd_10)
+#print("SSD for Image 11:", ssd_11)
+
+ssd_1 = np.sum(((Limg1[:,:]-bl_img1[:,:])**2)/(3*255**2))/(Limg1.shape[0]*Limg1.shape[1])
+ssd_2 = np.sum(((Limg2[:,:]-bl_img2[:,:])**2)/(3*255**2))/(Limg2.shape[0]*Limg2.shape[1])
+ssd_3 = np.sum(((Limg3[:,:]-bl_img3[:,:])**2)/(3*255**2))/(Limg3.shape[0]*Limg3.shape[1])
+ssd_4 = np.sum(((Limg4[:,:]-bl_img4[:,:])**2)/(3*255**2))/(Limg4.shape[0]*Limg4.shape[1])
+ssd_5 = np.sum(((Limg5[:,:]-bl_img5[:,:])**2)/(3*255**2))/(Limg5.shape[0]*Limg5.shape[1])
+ssd_6 = np.sum(((Limg6[:,:]-bl_img6[:,:])**2)/(3*255**2))/(Limg6.shape[0]*Limg6.shape[1])
+ssd_7 = np.sum(((Limg7[:,:]-bl_img7[:,:])**2)/(3*255**2))/(Limg7.shape[0]*Limg7.shape[1])
+ssd_8 = np.sum(((Limg8[:,:]-bl_img8[:,:])**2)/(3*255**2))/(Limg8.shape[0]*Limg8.shape[1])
+ssd_9 = np.sum(((Limg9[:,:]-bl_img9[:,:])**2)/(3*255**2))/(Limg9.shape[0]*Limg9.shape[1])
+ssd_10 = np.sum(((Limg10[:,:]-bl_img10[:,:])**2)/(3*255**2))/(Limg10.shape[0]*Limg10.shape[1])
+ssd_11 = np.sum(((Limg11[:,:]-bl_img11[:,:])**2)/(3*255**2))/(Limg11.shape[0]*Limg11.shape[1])
+
+print("SSD for Bilinear Interpolation")
+print("SSD for Image 1:", ssd_1)
+print("SSD for Image 2:", ssd_2)
+#print("SSD for Image 3:", ssd_3)
+print("SSD for Image 4:", ssd_4)
+print("SSD for Image 5:", ssd_5)
+print("SSD for Image 6:", ssd_6)
+print("SSD for Image 7:", ssd_7)
+#print("SSD for Image 8:", ssd_8)
+print("SSD for Image 9:", ssd_9)
+#print("SSD for Image 10:", ssd_10)
+#print("SSD for Image 11:", ssd_11)
 
 
-#scale_x=2
-#scale_y=2
-
-w2= 870
-h2=870
-w1=width
-h1=height
-img_nn = np.empty((w2,h2,chan), dtype=np.uint8)
-x_ratio=float(w1/float(w2))
-y_ratio=float(h1/float(h2))
-#x_ratio=float(1/float(scale_x))
-#y_ratio=float(1/float(scale_y))
-
-for i in range(0,w2):
-    for j in range(0,h2):
-        p_x=math.floor(j*x_ratio)
-        p_y=math.floor(i*y_ratio)
-      
-        img_nn[j,i]=img[int(p_x),int(p_y)]
-           
-cv2.imshow("Original Image",img)
-cv2.imshow("Scaled Image", img_nn)              
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+#Displaying the images
+fig,ax = plt.subplots(2,3, figsize = (15,15))
+'''ax[0,0].imshow(cv.cvtColor(img1, cv.COLOR_BGR2RGB))
+ax[0,0].set_title("Original Image")
+ax[0,1].imshow(cv.cvtColor(nn_img1, cv.COLOR_BGR2RGB))
+ax[0,1].set_title("Nearest Neighbour")
+ax[0,2].imshow(cv.cvtColor(bl_img1, cv.COLOR_BGR2RGB))
+ax[0,2].set_title("Bilinear Interpolation")
+ax[1,0].imshow(cv.cvtColor(img2, cv.COLOR_BGR2RGB))
+ax[1,0].set_title("Original Image")
+ax[1,1].imshow(cv.cvtColor(nn_img2, cv.COLOR_BGR2RGB))
+ax[1,1].set_title("Nearest Neighbour")
+ax[1,2].imshow(cv.cvtColor(bl_img2, cv.COLOR_BGR2RGB))
+ax[1,2].set_title("Bilinear Interpolation")
+ax[2,0].imshow(cv.cvtColor(img3, cv.COLOR_BGR2RGB))
+ax[2,0].set_title("Original Image")
+ax[2,1].imshow(cv.cvtColor(nn_img3, cv.COLOR_BGR2RGB))
+ax[2,1].set_title("Nearest Neighbour")
+ax[2,2].imshow(cv.cvtColor(bl_img3, cv.COLOR_BGR2RGB))
+ax[2,2].set_title("Bilinear Interpolation")
+ax[0,0].imshow(cv.cvtColor(img4, cv.COLOR_BGR2RGB))
+ax[0,0].set_title("Original Image")
+ax[0,1].imshow(cv.cvtColor(nn_img4, cv.COLOR_BGR2RGB))
+ax[0,1].set_title("Nearest Neighbour")
+ax[0,2].imshow(cv.cvtColor(bl_img4, cv.COLOR_BGR2RGB))
+ax[0,2].set_title("Bilinear Interpolation")
+ax[1,0].imshow(cv.cvtColor(img5, cv.COLOR_BGR2RGB))
+ax[1,0].set_title("Original Image")
+ax[1,1].imshow(cv.cvtColor(nn_img5, cv.COLOR_BGR2RGB))
+ax[1,1].set_title("Nearest Neighbour")
+ax[1,2].imshow(cv.cvtColor(bl_img5, cv.COLOR_BGR2RGB))
+ax[1,2].set_title("Bilinear Interpolation")
+ax[2,0].imshow(cv.cvtColor(img6, cv.COLOR_BGR2RGB))
+ax[2,0].set_title("Original Image")
+ax[2,1].imshow(cv.cvtColor(nn_img6, cv.COLOR_BGR2RGB))
+ax[2,1].set_title("Nearest Neighbour")
+ax[2,2].imshow(cv.cvtColor(bl_img6, cv.COLOR_BGR2RGB))
+ax[2,2].set_title("Bilinear Interpolation")
+ax[0,0].imshow(cv.cvtColor(img7, cv.COLOR_BGR2RGB))
+ax[0,0].set_title("Original Image")
+ax[0,1].imshow(cv.cvtColor(nn_img7, cv.COLOR_BGR2RGB))
+ax[0,1].set_title("Nearest Neighbour")
+ax[0,2].imshow(cv.cvtColor(bl_img7, cv.COLOR_BGR2RGB))
+ax[0,2].set_title("Bilinear Interpolation")
+ax[1,0].imshow(cv.cvtColor(img8, cv.COLOR_BGR2RGB))
+ax[1,0].set_title("Original Image")
+ax[1,1].imshow(cv.cvtColor(nn_img8, cv.COLOR_BGR2RGB))
+ax[1,1].set_title("Nearest Neighbour")
+ax[1,2].imshow(cv.cvtColor(bl_img8, cv.COLOR_BGR2RGB))
+ax[1,2].set_title("Bilinear Interpolation")
+ax[2,0].imshow(cv.cvtColor(img9, cv.COLOR_BGR2RGB))
+ax[2,0].set_title("Original Image")
+ax[2,1].imshow(cv.cvtColor(nn_img9, cv.COLOR_BGR2RGB))
+ax[2,1].set_title("Nearest Neighbour")
+ax[2,2].imshow(cv.cvtColor(bl_img9, cv.COLOR_BGR2RGB))
+ax[2,2].set_title("Bilinear Interpolation")'''
+ax[0,0].imshow(cv.cvtColor(img10, cv.COLOR_BGR2RGB))
+ax[0,0].set_title("Original Image")
+ax[0,1].imshow(cv.cvtColor(nn_img10, cv.COLOR_BGR2RGB))
+ax[0,1].set_title("Nearest Neighbour")
+ax[0,2].imshow(cv.cvtColor(bl_img10, cv.COLOR_BGR2RGB))
+ax[0,2].set_title("Bilinear Interpolation")
+ax[1,0].imshow(cv.cvtColor(img11, cv.COLOR_BGR2RGB))
+ax[1,0].set_title("Original Image")
+ax[1,1].imshow(cv.cvtColor(nn_img11, cv.COLOR_BGR2RGB))
+ax[1,1].set_title("Nearest Neighbour")
+ax[1,2].imshow(cv.cvtColor(bl_img11, cv.COLOR_BGR2RGB))
+ax[1,2].set_title("Bilinear Interpolation")
+plt.show()
