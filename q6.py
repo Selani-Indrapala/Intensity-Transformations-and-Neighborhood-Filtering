@@ -15,6 +15,8 @@ gr = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
 
 #Splitting into HSV planes
 h,s,v = cv.split(hsv_img)
+
+
 cv.imshow("Hue",h)
 cv.imshow("Saturation",s) #Choose Saturation Plane
 cv.imshow("value",v)
@@ -23,12 +25,16 @@ cv.destroyAllWindows()
 
 #Getting the mask
 ret, mask1 = cv.threshold(s, 12, 255, cv.THRESH_BINARY)
+
+
 cv.imshow('Mask',mask1)
 cv.waitKey(0)
 cv.destroyAllWindows()
 
 #Getting the foreground
 foreground = cv.bitwise_and(gr,gr,mask=mask1)
+
+
 cv.imshow('Foreground',foreground)
 cv.waitKey(0)
 cv.destroyAllWindows()
@@ -38,7 +44,13 @@ hist,bins = np.histogram(foreground.ravel(),256,[0,256])
 cdf = hist.cumsum()
 
 #Equilising the foreground
-equ = cv.equalizeHist(foreground)
+cdf_normalized = cdf * hist.max()/ cdf.max()
+cdf_m = np.ma.masked_equal(cdf,0)
+cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min())
+cdf = np.ma.filled(cdf_m,0).astype('uint8')
+equ = cdf[foreground]
+
+
 cv.imshow('Equalised Foreground',equ)
 cv.waitKey(0)
 cv.destroyAllWindows()
@@ -54,12 +66,14 @@ plt.show()
 #Extracting the background
 mask_inv = cv.bitwise_not(mask1)
 background = cv.bitwise_and(gr,gr,mask=mask_inv)
+
 cv.imshow('Background',background)
 cv.waitKey(0)
 cv.destroyAllWindows()
 
 #Adding both background and equalised foreground
 fin_img = cv.add(background,equ)
+
 cv.imshow("Original Image",gr)
 cv.imshow('Final Image',fin_img)
 cv.waitKey(0)
