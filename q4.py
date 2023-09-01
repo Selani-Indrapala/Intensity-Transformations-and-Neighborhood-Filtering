@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def IntensityTransform(x,alpha,sigma):
-    f1 = x + (alpha/128)*np.exp(-np.power(x-128,2)/(2*np.power(sigma,2)))
+    f1 = x + (alpha*128)*np.exp(-np.power(x-128,2)/(2*np.power(sigma,2)))
     f2 = 255
     f1[f1>f2]=f2
     return f1
